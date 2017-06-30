@@ -33,16 +33,10 @@ export const toggleTMMergeModal =
 /**
  * Fetch project version specific locales from database
  *
- * @param projectSlug project ID
- * @param versionSlug version ID
+ * @param project projectSlug
+ * @param version versionSlug
  * */
-export const fetchVersionLocales = (projectSlug, versionSlug) => {
-  return (dispatch) => {
-    dispatch(fetchProjectVersionLocales(dispatch, projectSlug, versionSlug))
-  }
-}
-
-function fetchProjectVersionLocales (dispatch, project, version) {
+export const fetchVersionLocales = (project, version) => {
   const endpoint = `${apiUrl}/project/${project}/version/${version}/locales`
   const apiTypes = [
     VERSION_LOCALES_REQUEST,
@@ -60,12 +54,6 @@ function fetchProjectVersionLocales (dispatch, project, version) {
  * @param projectSearchTerm to filter results
  * */
 export const fetchProjectPage = (projectSearchTerm) => {
-  return (dispatch) => {
-    dispatch(fetchSearchProjectPage(dispatch, projectSearchTerm))
-  }
-}
-
-function fetchSearchProjectPage (dispatch, projectSearchTerm) {
   const endpoint =
       `${apiUrl}/search/projects?q=${projectSearchTerm}&includeVersion=true`
   const apiTypes = [
