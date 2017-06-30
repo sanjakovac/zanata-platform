@@ -66,6 +66,11 @@ public class ProjectDAO extends AbstractDAOImpl<HProject, Long> {
         super(HProject.class, session);
     }
 
+    public ProjectDAO(FullTextEntityManager entityManager, Session session) {
+        super(HProject.class, session);
+        this.entityManager = entityManager;
+    }
+
     public @Nullable
     HProject getBySlug(@Nonnull String slug) {
         if (!StringUtils.isEmpty(slug)) {
@@ -283,7 +288,7 @@ public class ProjectDAO extends AbstractDAOImpl<HProject, Long> {
 
     private FullTextQuery buildSearchQuery(@Nonnull String searchQuery,
         boolean includeObsolete) throws ParseException {
-        String queryText = QueryParser.escape(searchQuery);
+//        String queryText = QueryParser.escape(searchQuery);
         Analyzer sourceAnalyzer = entityManager.getSearchFactory()
                 .getAnalyzer(Analyzers.DEFAULT);
         MultiFieldQueryParser queryParser = new MultiFieldQueryParser(
@@ -291,7 +296,8 @@ public class ProjectDAO extends AbstractDAOImpl<HProject, Long> {
         queryParser.setDefaultOperator(QueryParser.Operator.OR);
 
         BooleanQuery.Builder booleanQuery = new BooleanQuery.Builder();
-        booleanQuery.add(queryParser.parse(queryText), BooleanClause.Occur.SHOULD);
+//        booleanQuery.add(queryParser.parse(searchQuery + "*"), BooleanClause.Occur.SHOULD);
+        booleanQuery.add(buildSearchFieldQuery(searchQuery, "slug"), BooleanClause.Occur.SHOULD);
         if (!includeObsolete) {
             TermQuery obsoleteStateQuery =
                     new TermQuery(new Term(IndexFieldLabels.ENTITY_STATUS,
@@ -319,7 +325,7 @@ public class ProjectDAO extends AbstractDAOImpl<HProject, Long> {
         //escape special character search
         searchQuery = QueryParser.escape(searchQuery);
 
-        for(String searchString: searchQuery.split("\\s+")) {
+        for(String searchString: searchQuery.split("[\\s+\\-\\._]")) {
             QueryParser parser = new QueryParser(field,
                     new CaseInsensitiveWhitespaceAnalyzer());
             query.add(parser.parse(searchString + "*"), BooleanClause.Occur.MUST);
