@@ -118,7 +118,7 @@ const version = handleActions({
 // default state
   {
     TMMerge: {
-      show: false,
+      show: true,
       triggered: false,
       processStatus: undefined,
       projectVersions: []

@@ -228,9 +228,6 @@ class TMMergeModal extends Component {
     queryTMMergeProgress: PropTypes.func.isRequired,
     mergeProcessFinished: PropTypes.func.isRequired
   }
-  static defaultProps = {
-    showTMMergeModal: true
-  }
   constructor (props) {
     super(props)
     this.state = {
